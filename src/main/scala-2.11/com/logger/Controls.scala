@@ -21,8 +21,17 @@ import java.util.Date
   */
 object Controls {
 
+  private val usage =
+    """Usage: FrontLoggingService-assembly-xx.jar <application.conf_path>
+      application.conf_path - path to the application.conf file on disk"""
+
   def main(args: Array[String]): Unit = {
 
+    if(args.length !=1){
+      System.err.println(usage)
+      System.exit(-1)
+
+    }
 
     BasicConfigurator.configure()
 
@@ -100,8 +109,13 @@ object Controls {
 
     }
 
+    sys.addShutdownHook{
+
+      println("Caught ˆC, Abborting ....")
+      println("Clossing Connections ...")
+
+    }
 
   }
-
 
 }

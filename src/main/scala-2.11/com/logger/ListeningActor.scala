@@ -75,14 +75,16 @@ class ListeningActor(channel: Channel, queue: String, f: (String) => Any) extend
 }
 
 
-class AcknowledgeActor(channel: Channel, queue: String, rmqCorrelationId: String, header: String) extends Actor {
+class AcknowledgeActor(channel: Channel, queue: String = "rpc.default", rmqCorrelationId: String, header: String) extends Actor {
 
 
   def receive = {
 
     case "ReplyToRPC" =>
 
-      val props = new AMQP.BasicProperties.Builder().correlationId(rmqCorrelationId)
+      val props = new AMQP.BasicProperties
+      .Builder()
+        .correlationId(rmqCorrelationId)
         .replyTo(rmqCorrelationId)
         .build()
 
@@ -90,8 +92,6 @@ class AcknowledgeActor(channel: Channel, queue: String, rmqCorrelationId: String
       println(Thread.currentThread().getName)
       context.stop(self)
 
-
   }
-
 
 }

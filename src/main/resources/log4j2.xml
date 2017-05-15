@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="DEBUG">
+    <!--xmlns="jar:///Users/csclt/.ivy2/cache/org.apache.logging.log4j/log4j-core/srcs/log4j-core-2.6.2-sources.jar!/Log4j-config.xsd">-->
+    <Properties>
+        <Property name="log-path">C:/logs</Property>
+    </Properties>
+
+    <Appenders>
+        <RollingFile name="RollingFile" fileName="${log-path}/LoggingInfo.log"
+                     filePattern="${log-path}/LoggingInfo-d%{yyyy-MM-dd}-%i.log">
+            <PatternLayout>
+                <pattern>%d{dd/MMM/yyyy HH:mm:ss,SSS}- %c{1}: %m%n</pattern>
+            </PatternLayout>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="300 KB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="8"/>
+        </RollingFile>
+    </Appenders>
+
+    <Loggers>
+        <Logger name="root" level="debug" additivity="false">
+            <appender-ref ref="RollingFile" level="debug"/>
+        </Logger>
+        <Root level="debug" additivity="false">
+            <AppenderRef ref="RollingFile"/>
+        </Root>
+
+    </Loggers>
+</Configuration>
