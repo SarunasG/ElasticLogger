@@ -6,10 +6,16 @@
     </Properties>
 
     <Appenders>
+
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{} [%t] %-5level %logger{36} - %msg%n"/>
+        </Console>
+
+
         <RollingFile name="RollingFile" fileName="${log-path}/LoggingInfo.log"
                      filePattern="${log-path}/LoggingInfo-d%{yyyy-MM-dd}-%i.log">
             <PatternLayout>
-                <pattern>%d{dd/MMM/yyyy HH:mm:ss,SSS}- %c{1}: %m%n</pattern>
+                <pattern>%d{dd/MMM/yyyy HH:mm:ss,SSS}- %p %M %L %c{1}: %m%n</pattern>
             </PatternLayout>
             <Policies>
                 <SizeBasedTriggeringPolicy size="300 KB"/>
@@ -19,12 +25,11 @@
     </Appenders>
 
     <Loggers>
-        <Logger name="root" level="debug" additivity="false">
-            <appender-ref ref="RollingFile" level="debug"/>
-        </Logger>
-        <Root level="debug" additivity="false">
-            <AppenderRef ref="RollingFile"/>
-        </Root>
+        <Root level="debug">
 
+            <appender-ref ref="Console" level="info"/>
+            <appender-ref ref="RollingFile" level="info"/>
+            <appender-ref ref="RollingFile" level="error"/>
+        </Root>
     </Loggers>
 </Configuration>
