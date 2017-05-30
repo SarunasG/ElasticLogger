@@ -46,6 +46,14 @@ object Controls {
     val rabbitMQChannel = RabbitMQConnection
       .getChannel(rabbitMQConnection, exchange, queueName, routingKey, exchangeType, durable, exclusive, autoDelete)
 
+    /***
+      * allows to pass elasticCluster arguments as property map
+      */
+    import scala.collection.JavaConversions._
+    val elasticClusterArgs = configElk.entrySet().map({ entry =>
+      entry.getKey -> entry.getValue.unwrapped()
+    })(collection.breakOut).toMap
+
     val elkClient = ElasticConnection.getHttpElkClient(elasticHostname, elasticPort, elasticUserName, elasticPassword)
 
     logger.info("Application has Started")

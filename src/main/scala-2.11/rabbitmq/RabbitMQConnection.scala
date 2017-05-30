@@ -1,11 +1,12 @@
 package rabbitmq
 
 
+import java.io.{PrintWriter, StringWriter}
 import javax.net.ssl.SSLContext
 
 import akka.actor.{ActorSystem, Props}
 import com.logger.ListeningActor
-import com.rabbitmq.client.{Channel, Connection, ConnectionFactory}
+import com.rabbitmq.client._
 import org.apache.logging.log4j.LogManager
 
 import scala.collection.immutable.NumericRange.Exclusive
@@ -22,6 +23,7 @@ object RabbitMQConnection {
   val logger = LogManager.getLogger("RabbitMQConnection")
   val system = ActorSystem("RabbitMqActorSystem")
   private val connection = None: Option[Connection]
+  val sw = new StringWriter()
 
   def setupListener(receivingChannel: Channel, queue: String, f: (String) => Any): Unit = {
 
@@ -49,7 +51,24 @@ object RabbitMQConnection {
         }
 
         logger.info("The RabbitMQ Connection factory has been successfully created")
-        Some(factory.newConnection)
+        try{
+          val rmqConnection = Some(factory.newConnection)
+          rmqConnection.get.addShutdownListener(new ShutdownListener() {
+             def shutdownCompleted(cause : ShutdownSignalException): Unit = {
+
+              logger.error(cause + "\n" + cause.getReason)
+            }
+          })
+          rmqConnection
+        } catch {
+
+          case ex: Exception => ex.printStackTrace(new PrintWriter(sw))
+            logger.error(sw.toString)
+            System.exit(-1)
+            None
+        }
+
+
 
       case _ => connection
 

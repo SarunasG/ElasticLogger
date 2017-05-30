@@ -13,8 +13,8 @@ final class ApplicationConfig(configPath : String) {
 
   val cfg: Config = ConfigFactory.load(ConfigFactory.parseFile(myConfigFile))
 
-  protected val config: Config = cfg.getConfig("rabbitmq-config").withFallback(cfg)
-  protected val configElk: Config = cfg.getConfig("elastic-config").withFallback(cfg)
+   val config: Config = cfg.getConfig("rabbitmq-config")
+   val configElk: Config = cfg.getConfig("elastic-config")
 
 
   val sslStatus: Boolean = config.getString("ssl.status").toBoolean
